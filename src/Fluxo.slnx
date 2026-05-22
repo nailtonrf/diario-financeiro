@@ -1,0 +1,5 @@
+<Solution>
+    <Project Path="Fluxo.Abstractions/Fluxo.Abstractions.csproj"/>
+    <Project Path="Fluxo.Lancamentos.Service/Fluxo.Lancamentos.Service.csproj"/>
+    <Project Path="Fluxo.Saldos.Service/Fluxo.Saldos.Service.csproj"/>
+</Solution>
