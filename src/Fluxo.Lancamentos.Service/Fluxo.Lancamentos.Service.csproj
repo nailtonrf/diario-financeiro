@@ -21,4 +21,8 @@
         <ProjectReference Include="..\Fluxo.ServiceDefaults\Fluxo.ServiceDefaults.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Infra\"/>
+    </ItemGroup>
+
 </Project>

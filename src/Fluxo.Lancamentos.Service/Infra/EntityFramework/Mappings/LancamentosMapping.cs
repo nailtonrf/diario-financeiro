@@ -3,7 +3,7 @@ using Fluxo.Lancamentos.Service.Core.Creditar;
 using Fluxo.Lancamentos.Service.Core.Debitar;
 using Fluxo.Lancamentos.Service.Core.Estornar;
 
-namespace Fluxo.Lancamentos.Service.Shell.Resources.Entities;
+namespace Fluxo.Lancamentos.Service.Infra.EntityFramework.Mappings;
 
 public sealed class LancamentosMapping : IEntityTypeConfiguration<Lancamento>
 {

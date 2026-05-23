@@ -26,8 +26,8 @@ var postgres = builder
         postgresPassword)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithEndpoint(
-        port: postgresPort,
-        targetPort: 5432,
+        postgresPort,
+        5432,
         name: "tcp");
 
 var db = postgres.AddDatabase(postgresDb);

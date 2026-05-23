@@ -7,4 +7,6 @@ public abstract record Lancamento : IEvent
     public required DateTime Data { get; init; }
     public required DateOnly DataCompetencia { get; init; }
     public required decimal Valor { get; init; }
+    
+    
 }

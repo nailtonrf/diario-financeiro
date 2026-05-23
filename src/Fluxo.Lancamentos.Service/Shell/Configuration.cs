@@ -1,4 +1,4 @@
-﻿using Fluxo.Lancamentos.Service.Shell.Resources.Entities;
+﻿using Fluxo.Lancamentos.Service.Infra.EntityFramework;
 using Fluxo.Lancamentos.Service.Shell.Stores;
 
 namespace Fluxo.Lancamentos.Service.Shell;

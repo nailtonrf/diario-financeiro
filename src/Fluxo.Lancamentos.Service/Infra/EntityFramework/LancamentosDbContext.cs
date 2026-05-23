@@ -1,6 +1,6 @@
 ﻿using Fluxo.Lancamentos.Service.Core;
 
-namespace Fluxo.Lancamentos.Service.Shell.Resources.Entities;
+namespace Fluxo.Lancamentos.Service.Infra.EntityFramework;
 
 public sealed class LancamentosDbContext(DbContextOptions<LancamentosDbContext> options) : DbContext(options)
 {

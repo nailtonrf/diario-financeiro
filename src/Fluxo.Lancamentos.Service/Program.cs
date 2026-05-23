@@ -1,8 +1,8 @@
 using Fluxo.Lancamentos.Service.Core;
 using Fluxo.Lancamentos.Service.Core.Creditar;
 using Fluxo.Lancamentos.Service.Core.Debitar;
+using Fluxo.Lancamentos.Service.Infra.EntityFramework;
 using Fluxo.Lancamentos.Service.Shell;
-using Fluxo.Lancamentos.Service.Shell.Resources.Entities;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,6 +1,6 @@
 ﻿using Fluxo.Lancamentos.Service.Core;
 
-namespace Fluxo.Lancamentos.Service.Shell.Resources.Entities;
+namespace Fluxo.Lancamentos.Service.Infra.EntityFramework.Mappings;
 
 public class CompetenciaMapping : IEntityTypeConfiguration<Competencia>
 {

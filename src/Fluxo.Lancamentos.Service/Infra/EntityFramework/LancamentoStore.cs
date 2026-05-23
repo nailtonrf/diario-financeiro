@@ -2,7 +2,7 @@
 using Fluxo.Lancamentos.Service.Core.Estornar;
 using Fluxo.Lancamentos.Service.Shell.Stores;
 
-namespace Fluxo.Lancamentos.Service.Shell.Resources.Entities;
+namespace Fluxo.Lancamentos.Service.Infra.EntityFramework;
 
 public sealed class LancamentoStore(
     LancamentosDbContext dbContext) : ILancamentoStore
