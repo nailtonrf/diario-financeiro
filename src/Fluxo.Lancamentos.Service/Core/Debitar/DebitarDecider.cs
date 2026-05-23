@@ -2,20 +2,21 @@
 
 using static GuidModule;
 using static ValorPositivoModule;
-using static CompetenciaModule;
 
 public static class DebitarDecider
 {
-    public static Result<DebitoEfetuadoEvent> Decide(Competencia competencia, DebitarCommand debitarCommand)
-        => competencia
-            .ValidarCompetencia(debitarCommand.Data)
-            .Bind(_ => debitarCommand.Valor.ValidarValorPositivo())
+    public static Result<DebitoEfetuadoEvent> Decide(
+        DateTime dataAtual,
+        Competencia competencia,
+        DebitarCommand debitarCommand)
+        => debitarCommand.Valor.ValidarValorPositivo()
             .Map(valorPositivo =>
                 new DebitoEfetuadoEvent
                 {
-                    Id = new LancamentoId(Sequential()),
+                    IdLancamento = new LancamentoId(Sequential()),
                     Descricao = debitarCommand.Descricao,
-                    Data = debitarCommand.Data,
+                    Data = dataAtual,
+                    DataCompetencia = competencia.DataCompetencia,
                     Valor = valorPositivo.Valor
                 });
 }

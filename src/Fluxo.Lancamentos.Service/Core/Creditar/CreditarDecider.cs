@@ -2,20 +2,22 @@
 
 using static GuidModule;
 using static ValorPositivoModule;
-using static CompetenciaModule;
 
 public static class CreditarDecider
 {
-    public static Result<CreditoEfetuadoEvent> Decide(Competencia competencia, CreditarCommand creditarCommand)
-        => competencia
-            .ValidarCompetencia(creditarCommand.Data)
-            .Bind(_ => creditarCommand.Valor.ValidarValorPositivo())
+    public static Result<CreditoEfetuadoEvent> Decide(
+        DateTime dataAtual,
+        Competencia competencia,
+        CreditarCommand creditarCommand)
+        => creditarCommand.Valor
+            .ValidarValorPositivo()
             .Map(valorPositivo =>
                 new CreditoEfetuadoEvent
                 {
-                    Id = new LancamentoId(Sequential()),
+                    IdLancamento = new LancamentoId(Sequential()),
                     Descricao = creditarCommand.Descricao,
-                    Data = creditarCommand.Data,
+                    Data = dataAtual,
+                    DataCompetencia = competencia.DataCompetencia,
                     Valor = valorPositivo.Valor
                 });
 }

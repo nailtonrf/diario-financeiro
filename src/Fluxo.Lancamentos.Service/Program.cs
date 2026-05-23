@@ -1,45 +1,108 @@
-using Fluxo.Lancamentos.Service;
+using Fluxo.Lancamentos.Service.Core;
+using Fluxo.Lancamentos.Service.Core.Creditar;
+using Fluxo.Lancamentos.Service.Core.Debitar;
+using Fluxo.Lancamentos.Service.Shell;
+using Fluxo.Lancamentos.Service.Shell.Resources.Entities;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.AddServiceDefaults();
+
 builder.Services.AddOpenApi();
+
+builder.Services.UseLancamentos(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-    app.MapOpenApi();
+await AplicarMigrationsAsync(app);
+
+await SeedCompetenciaAsync(app);
+
+app.MapDefaultEndpoints();
+
+app.MapOpenApi();
+
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
+app.MapPost(
+        "/lancamentos/creditar",
+        async (
+            CreditarCommand command,
+            IInteractor<CreditarCommand, CreditoEfetuadoEvent> interactor,
+            CancellationToken cancellationToken) =>
+        {
+            var result =
+                await interactor.InteractAsync(
+                    command,
+                    cancellationToken);
+
+            return result.Match(
+                success => Results.Created($"/lancamentos/{success.IdLancamento}", success),
+                Results.BadRequest);
+        })
+    .WithName("Creditar")
+    .WithTags("Lancamentos")
+    .WithSummary("Efetua um crédito.")
+    .Produces<CreditoEfetuadoEvent>(201)
+    .Produces<ErrorResult>(400);
+
+app.MapPost(
+        "/lancamentos/debitar",
+        async (
+            DebitarCommand command,
+            IInteractor<DebitarCommand, DebitoEfetuadoEvent> interactor,
+            CancellationToken cancellationToken) =>
+        {
+            var result =
+                await interactor.InteractAsync(
+                    command,
+                    cancellationToken);
+
+            return result.Match(
+                success => Results.Created($"/lancamentos/{success.IdLancamento}", success),
+                Results.BadRequest);
+        })
+    .WithName("Debitar")
+    .WithTags("Lancamentos")
+    .WithSummary("Efetua um débito.")
+    .Produces<CreditoEfetuadoEvent>(201)
+    .Produces<ErrorResult>(400);
+
+await app.RunAsync();
+
+return;
+
+static async Task AplicarMigrationsAsync(WebApplication app)
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    using var scope = app.Services.CreateScope();
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
+    var db = scope.ServiceProvider
+        .GetRequiredService<LancamentosDbContext>();
 
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+    await db.Database.MigrateAsync();
+}
 
-app.Run();
-
-namespace Fluxo.Lancamentos.Service
+static async Task SeedCompetenciaAsync(WebApplication app)
 {
-    internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    using var scope = app.Services.CreateScope();
+
+    var db = scope.ServiceProvider
+        .GetRequiredService<LancamentosDbContext>();
+
+    if (!await db.Competencias.AnyAsync())
     {
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        db.Competencias.Add(
+            new Competencia
+            {
+                Id = 1,
+                DataCompetencia =
+                    DateOnly.FromDateTime(
+                        DateTime.UtcNow)
+            });
+
+        await db.SaveChangesAsync();
     }
 }

@@ -6,25 +6,30 @@ using static GuidModule;
 
 public static class EstornarDecider
 {
-    public static Result<EstornoEfetuadoEvent> Decide(Competencia competencia, Lancamento lancamentoEstornar)
+    public static Result<EstornoEfetuadoEvent> Decide(
+        DateTime dataAtual,
+        Competencia competencia,
+        Lancamento lancamentoEstornar)
         => lancamentoEstornar switch
         {
             EstornoEfetuadoEvent => ErrorResult.Validation("Lançamento já foi estornado."),
             CreditoEfetuadoEvent c => Ok(new EstornoEfetuadoEvent
             {
-                Id = new LancamentoId(Sequential()),
+                IdLancamento = new LancamentoId(Sequential()),
                 Descricao = $"[Estorno a Débito] -  {c.Descricao}",
-                Data = competencia.DataCorrenteComHora,
+                Data = dataAtual,
+                DataCompetencia = competencia.DataCompetencia,
                 Valor = c.Valor * -1,
-                IdEstornado = c.Id
+                IdEstornado = c.IdLancamento
             }),
             DebitoEfetuadoEvent d => Ok(new EstornoEfetuadoEvent
             {
-                Id = new LancamentoId(Sequential()),
+                IdLancamento = new LancamentoId(Sequential()),
                 Descricao = $"[Estorno a Crédito] -  {d.Descricao}",
-                Data = competencia.DataCorrenteComHora,
-                Valor = d.Valor * -1,
-                IdEstornado = d.Id
+                Data = dataAtual,
+                DataCompetencia = competencia.DataCompetencia,
+                Valor = d.Valor,
+                IdEstornado = d.IdLancamento
             }),
             _ => throw new ArgumentOutOfRangeException(nameof(lancamentoEstornar), lancamentoEstornar, null)
         };

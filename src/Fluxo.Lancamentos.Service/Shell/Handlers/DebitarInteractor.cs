@@ -12,6 +12,6 @@ public sealed class DebitarInteractor(
         CancellationToken cancellationToken)
         => await competenciaStore.GetAsync(cancellationToken)
             .ToResult(ErrorResult.Validation("Data de Competência não cadastrada."))
-            .Bind(competencia => DebitarDecider.Decide(competencia, debitar))
+            .Bind(competencia => DebitarDecider.Decide(DateTime.UtcNow, competencia, debitar))
             .Bind(async evento => await lancamentoStore.AppendAsync(evento, cancellationToken));
 }

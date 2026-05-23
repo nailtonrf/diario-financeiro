@@ -21,7 +21,7 @@ public sealed class EstornarInteractor(
 
         return await competenciaStore.GetAsync(cancellationToken)
             .ToResult(ErrorResult.Validation("Data de Competência não cadastrada."))
-            .Bind(competencia => EstornarDecider.Decide(competencia, lancamentoEstornoOption.Value!))
+            .Bind(competencia => EstornarDecider.Decide(DateTime.UtcNow, competencia, lancamentoEstornoOption.Value!))
             .Bind(async evento => await lancamentoStore.AppendAsync(evento, cancellationToken));
     }
 }

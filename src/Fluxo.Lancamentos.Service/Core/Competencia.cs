@@ -1,5 +1,7 @@
 ﻿namespace Fluxo.Lancamentos.Service.Core;
 
-public record Competencia(
-    DateOnly DataCorrente,
-    DateTime DataCorrenteComHora);
+public sealed record Competencia
+{
+    public int Id { get; init; } = 1;
+    public required DateOnly DataCompetencia { get; init; }
+}

@@ -12,6 +12,6 @@ public sealed class CreditarInteractor(
         CancellationToken cancellationToken)
         => await competenciaStore.GetAsync(cancellationToken)
             .ToResult(ErrorResult.Validation("Data de Competência não cadastrada."))
-            .Bind(competencia => CreditarDecider.Decide(competencia, creditar))
+            .Bind(competencia => CreditarDecider.Decide(DateTime.UtcNow, competencia, creditar))
             .Bind(async evento => await lancamentoStore.AppendAsync(evento, cancellationToken));
 }
