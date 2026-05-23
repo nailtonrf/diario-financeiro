@@ -1,14 +1,13 @@
-﻿using Fluxo.Lancamentos.Service.Infra.EntityFramework;
-using Fluxo.Lancamentos.Service.Shell.Stores;
-
-namespace Fluxo.Lancamentos.Service.Shell;
+﻿namespace Fluxo.Lancamentos.Service.Infra;
 
 using Core.Creditar;
 using Core.Debitar;
 using Core.Estornar;
-using Handlers;
+using EntityFramework;
+using Shell.Handlers;
+using Shell.Stores;
 
-public static class Configuration
+public static class Dependencies
 {
     public static IServiceCollection UseLancamentos(this IServiceCollection services, IConfiguration configuration)
     {

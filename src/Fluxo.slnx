@@ -1,9 +1,9 @@
 <Solution>
     <Folder Name="/Hosting/">
-        <Project Path="Fluxo.AppHost/Fluxo.AppHost.csproj" />
-        <Project Path="Fluxo.ServiceDefaults/Fluxo.ServiceDefaults.csproj" />
+        <Project Path="Fluxo.AppHost/Fluxo.AppHost.csproj"/>
+        <Project Path="Fluxo.ServiceDefaults/Fluxo.ServiceDefaults.csproj"/>
     </Folder>
-    <Project Path="Fluxo.Abstractions/Fluxo.Abstractions.csproj" />
-    <Project Path="Fluxo.Lancamentos.Service/Fluxo.Lancamentos.Service.csproj" />
-    <Project Path="Fluxo.Saldos.Service/Fluxo.Saldos.Service.csproj" />
+    <Project Path="Fluxo.Abstractions/Fluxo.Abstractions.csproj"/>
+    <Project Path="Fluxo.Lancamentos.Service/Fluxo.Lancamentos.Service.csproj"/>
+    <Project Path="Fluxo.Saldos.Service/Fluxo.Saldos.Service.csproj"/>
 </Solution>
