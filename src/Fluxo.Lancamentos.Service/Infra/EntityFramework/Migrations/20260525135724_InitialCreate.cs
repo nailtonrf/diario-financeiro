@@ -32,7 +32,7 @@ namespace Fluxo.Lancamentos.Service.Migrations
                     Data = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     DataCompetencia = table.Column<DateOnly>(type: "date", nullable: false),
                     Valor = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
-                    TipoEvento = table.Column<string>(type: "character varying(13)", maxLength: 13, nullable: false),
+                    TipoEvento = table.Column<string>(type: "character varying(21)", maxLength: 21, nullable: false),
                     IdEstornado = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>

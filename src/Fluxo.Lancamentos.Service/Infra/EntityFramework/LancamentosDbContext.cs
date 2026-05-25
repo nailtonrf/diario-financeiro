@@ -1,8 +1,10 @@
-﻿using Fluxo.Lancamentos.Service.Core;
+﻿namespace Fluxo.Lancamentos.Service.Infra.EntityFramework;
 
-namespace Fluxo.Lancamentos.Service.Infra.EntityFramework;
+using Core;
+using Shell.Stores;
 
-public sealed class LancamentosDbContext(DbContextOptions<LancamentosDbContext> options) : DbContext(options)
+public sealed class LancamentosDbContext(DbContextOptions<LancamentosDbContext> options)
+    : DbContext(options), ILancamentosDataContext
 {
     public DbSet<Lancamento> Lancamentos => Set<Lancamento>();
 

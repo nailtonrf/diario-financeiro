@@ -10,7 +10,6 @@ public sealed class LancamentoStore(
     public async Task<Result<T>> AppendAsync<T>(T @event, CancellationToken cancellationToken) where T : Lancamento
     {
         await dbContext.Lancamentos.AddAsync(@event, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
 
         return Ok(@event);
     }
@@ -33,4 +32,8 @@ public sealed class LancamentoStore(
             ? None<Lancamento>()
             : Some(estorno);
     }
+
+    public Task<Option<Lancamento[]>> GetByDataCompetenciaAsync(
+        DateOnly dataCompetencia,
+        CancellationToken cancellationToken) => throw new NotImplementedException();
 }

@@ -6,7 +6,8 @@ public static class GuidModule
     ///     Sequential Guid - better database indexing.
     /// </summary>
     /// <returns></returns>
-    public static Guid Sequential() => Guid.CreateVersion7();
+    public static Guid Sequential()
+        => Guid.CreateVersion7();
 
     /// <summary>
     ///     String to Guid.

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fluxo.Lancamentos.Service.Migrations
 {
     [DbContext(typeof(LancamentosDbContext))]
-    [Migration("20260523173854_InitialCreate")]
+    [Migration("20260525135724_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -56,8 +56,8 @@ namespace Fluxo.Lancamentos.Service.Migrations
 
                     b.Property<string>("TipoEvento")
                         .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
+                        .HasMaxLength(21)
+                        .HasColumnType("character varying(21)");
 
                     b.Property<decimal>("Valor")
                         .HasPrecision(18, 2)
@@ -70,6 +70,13 @@ namespace Fluxo.Lancamentos.Service.Migrations
                     b.HasDiscriminator<string>("TipoEvento").HasValue("Lancamento");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Fluxo.Lancamentos.Service.Core.Consolidar.DiaConsolidadoEvent", b =>
+                {
+                    b.HasBaseType("Fluxo.Lancamentos.Service.Core.Lancamento");
+
+                    b.HasDiscriminator().HasValue("DiaConsolidado");
                 });
 
             modelBuilder.Entity("Fluxo.Lancamentos.Service.Core.Creditar.CreditoEfetuadoEvent", b =>

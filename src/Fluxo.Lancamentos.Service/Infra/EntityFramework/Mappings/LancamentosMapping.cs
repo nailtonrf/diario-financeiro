@@ -1,4 +1,5 @@
 ﻿using Fluxo.Lancamentos.Service.Core;
+using Fluxo.Lancamentos.Service.Core.Consolidar;
 using Fluxo.Lancamentos.Service.Core.Creditar;
 using Fluxo.Lancamentos.Service.Core.Debitar;
 using Fluxo.Lancamentos.Service.Core.Estornar;
@@ -34,7 +35,8 @@ public sealed class LancamentosMapping : IEntityTypeConfiguration<Lancamento>
         builder.HasDiscriminator<string>("TipoEvento")
             .HasValue<CreditoEfetuadoEvent>("Credito")
             .HasValue<DebitoEfetuadoEvent>("Debito")
-            .HasValue<EstornoEfetuadoEvent>("Estorno");
+            .HasValue<EstornoEfetuadoEvent>("Estorno")
+            .HasValue<DiaConsolidadoEvent>("DiaConsolidado");
     }
 }
 

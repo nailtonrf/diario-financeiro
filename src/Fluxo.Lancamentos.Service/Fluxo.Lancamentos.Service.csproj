@@ -13,11 +13,13 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1"/>
+        <PackageReference Include="RabbitMQ.Client" Version="7.2.1"/>
         <PackageReference Include="Scalar.AspNetCore" Version="2.14.14"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Fluxo.Abstractions\Fluxo.Abstractions.csproj"/>
+        <ProjectReference Include="..\Fluxo.Contracts\Fluxo.Contracts.csproj"/>
         <ProjectReference Include="..\Fluxo.ServiceDefaults\Fluxo.ServiceDefaults.csproj"/>
     </ItemGroup>
 

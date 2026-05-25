@@ -1,6 +1,0 @@
-@Fluxo.Saldos.Service_HostAddress = http://localhost:5252
-
-GET {{Fluxo.Saldos.Service_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
