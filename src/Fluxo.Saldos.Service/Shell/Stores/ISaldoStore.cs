@@ -5,9 +5,9 @@ using Core;
 public interface ISaldoStore
 {
     Task InsertAsync(
-        Saldo saldo, 
+        Saldo saldo,
         CancellationToken cancellationToken);
-    
+
     Task<Saldo[]> GetAllAsync(
         CancellationToken cancellationToken);
 }
