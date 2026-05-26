@@ -8,7 +8,7 @@ using RabbitMQ.Client;
 public sealed class Producer(
     IConnectionFactory connectionFactory) : IProducer
 {
-    private const string Fila = "consolidarSaldo.command";
+    private const string Fila = "consolidarsaldo.command";
 
     public async ValueTask ProduceAsync<T>(T message, CancellationToken cancellationToken) where T : IMessage
     {

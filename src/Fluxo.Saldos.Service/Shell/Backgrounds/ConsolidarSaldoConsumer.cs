@@ -10,7 +10,7 @@ public sealed class ConsolidarSaldoConsumer(
     IConsumer consumerProvider,
     IServiceScopeFactory scopeFactory) : BackgroundService
 {
-    private const string Fila = "consolidarSaldo.command";
+    private const string Fila = "consolidarsaldo.command";
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
