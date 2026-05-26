@@ -10,7 +10,7 @@ public sealed class Producer(
 {
     private const string Fila = "consolidarSaldo.command";
 
-    public async ValueTask ProduceAsync(IMessage message, CancellationToken cancellationToken)
+    public async ValueTask ProduceAsync<T>(T message, CancellationToken cancellationToken) where T : IMessage
     {
         await using var connection =
             await connectionFactory.CreateConnectionAsync(cancellationToken);

@@ -10,10 +10,12 @@ public sealed class ConsolidarSaldoConsumer(
     IConsumer consumerProvider,
     IServiceScopeFactory scopeFactory) : BackgroundService
 {
+    private const string Fila = "consolidarSaldo.command";
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         await consumerProvider.ConsumeAsync<ConsolidarSaldoCommand>(
-            "lancamentos",
+            Fila,
             HandleAsync,
             stoppingToken);
     }
@@ -23,9 +25,8 @@ public sealed class ConsolidarSaldoConsumer(
         CancellationToken cancellationToken)
     {
         var saldo = new Saldo(
-            Id: Sequential().ToString(),
+            Sequential().ToString(),
             command.DataCompetencia,
-            Valor:
             command.SaldoAnterior +
             command.TotalCreditos -
             command.TotalDebitos +

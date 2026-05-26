@@ -15,11 +15,11 @@ builder
     .WithReference(posgres)
     .WithReference(rabbitMq);
 
-// builder
-//     .AddProject<Projects.Fluxo_Saldos_Service>("fluxo-saldos-service")
-//     .WithReference(posgres)
-//     .WithReference(mongo)
-//     .WithReference(rabbitMq);
+builder
+    .AddProject<Projects.Fluxo_Saldos_Service>("fluxo-saldos-service")
+    .WithReference(posgres)
+    .WithReference(mongo)
+    .WithReference(rabbitMq);
 
 builder.Build().Run();
 
@@ -119,9 +119,5 @@ IResourceBuilder<RabbitMQServerResource> ConfigureRabbitMq(IDistributedApplicati
             rabbitPort,
             5672,
             name: "tcp")
-        .WithEndpoint(
-            rabbitManagementPort,
-            15672,
-            name: "management")
         .WithManagementPlugin();
 }

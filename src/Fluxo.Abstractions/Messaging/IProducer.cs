@@ -4,5 +4,7 @@ using Shell;
 
 public interface IProducer
 {
-    ValueTask ProduceAsync(IMessage message, CancellationToken cancellationToken);
+    ValueTask ProduceAsync<T>(
+        T message,
+        CancellationToken cancellationToken) where T : IMessage;
 }

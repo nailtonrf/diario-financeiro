@@ -4,6 +4,7 @@ using Abstractions.Messaging;
 using Shell.Backgrounds;
 using Shell.Stores;
 using Rabbit;
+using RabbitMQ.Client;
 using MongoDb;
 using MongoDB.Driver;
 
@@ -14,7 +15,7 @@ public static class DependenciesInitialization
         services.AddSingleton<IMongoClient>(_ =>
         {
             var connectionString =
-                configuration.GetConnectionString("mongo");
+                configuration.GetConnectionString("saldodb");
 
             return new MongoClient(connectionString);
         });
@@ -27,6 +28,12 @@ public static class DependenciesInitialization
         });
 
         services.AddTransient<ISaldoStore, SaldoStore>();
+
+        services.AddSingleton<IConnectionFactory>(_
+            => new ConnectionFactory
+            {
+                Uri = new Uri(configuration.GetConnectionString("rabbitmq")!)
+            });
 
         services.AddSingleton<IConsumer, Consumer>();
 

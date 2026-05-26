@@ -69,43 +69,52 @@ public sealed class ConsolidarDiaInteractor(
     private async ValueTask PersistirAsync(
         Competencia novaCompetencia,
         DiaConsolidadoEvent evento,
-        CancellationToken ct)
+        CancellationToken cancellationToken)
     {
         competenciaStore.Save(novaCompetencia);
 
         await lancamentoStore.AppendAsync(
             evento,
-            ct);
+            cancellationToken);
 
-        await dataContext.SaveChangesAsync(ct);
+        await dataContext.SaveChangesAsync(cancellationToken);
     }
 
     private async ValueTask<ConsolidarSaldoCommand>
         CalcularSaldoAsync(
             DateOnly dataCompetencia,
-            CancellationToken ct)
+            CancellationToken cancellationToken)
     {
-        var lancamentosOption =
+        var lancamentosAnteriores =
+            await lancamentoStore
+                .GetAnterioresCompetenciaAsync(
+                    dataCompetencia,
+                    cancellationToken);
+
+        var lancamentosCompetencia =
             await lancamentoStore
                 .GetByDataCompetenciaAsync(
                     dataCompetencia,
-                    ct);
+                    cancellationToken);
 
-        var lancamentos =
-            lancamentosOption.Value!;
-
-        return new ConsolidarSaldoCommand(
-            dataCompetencia,
-            0,
-            Totalizar<CreditoEfetuadoEvent>(
-                lancamentos,
-                dataCompetencia),
-            Totalizar<DebitoEfetuadoEvent>(
-                lancamentos,
-                dataCompetencia),
-            Totalizar<EstornoEfetuadoEvent>(
-                lancamentos,
-                dataCompetencia));
+        return new ConsolidarSaldoCommand
+        {
+            DataCompetencia = dataCompetencia,
+            SaldoAnterior = SaldoEvolver.Evolve(new Saldo(DateOnly.MinValue, 0), lancamentosAnteriores)
+                .Valor,
+            TotalCreditos =
+                Totalizar<CreditoEfetuadoEvent>(
+                    lancamentosCompetencia,
+                    dataCompetencia),
+            TotalDebitos =
+                Totalizar<DebitoEfetuadoEvent>(
+                    lancamentosCompetencia,
+                    dataCompetencia),
+            TotalEstornos =
+                Totalizar<EstornoEfetuadoEvent>(
+                    lancamentosCompetencia,
+                    dataCompetencia)
+        };
     }
 
     static private decimal Totalizar<TEvento>(

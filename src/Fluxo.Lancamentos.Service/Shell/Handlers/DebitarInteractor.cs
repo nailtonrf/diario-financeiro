@@ -8,7 +8,7 @@ public sealed class DebitarInteractor(
     ICompetenciaStore competenciaStore,
     ILancamentoStore lancamentoStore) : IInteractor<DebitarCommand, DebitoEfetuadoEvent>
 {
-    public async ValueTask<Result<DebitoEfetuadoEvent>> 
+    public async ValueTask<Result<DebitoEfetuadoEvent>>
         InteractAsync(
             DebitarCommand debitar,
             CancellationToken cancellationToken)
@@ -17,16 +17,16 @@ public sealed class DebitarInteractor(
             .ToResult(
                 ErrorResult.Validation(
                     "Data de Competência não cadastrada."))
-            .Bind(competencia => 
+            .Bind(competencia =>
                 DebitarDecider.Decide(
-                    DateTime.UtcNow, 
-                    competencia, 
+                    DateTime.UtcNow,
+                    competencia,
                     debitar))
-            .Bind(evento => 
+            .Bind(evento =>
                 lancamentoStore.AppendAsync(
-                    evento, 
+                    evento,
                     cancellationToken))
             .Tee(_ =>
                 dataContext.SaveChangesAsync(
-                    cancellationToken));    
+                    cancellationToken));
 }

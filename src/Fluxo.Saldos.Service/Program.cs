@@ -1,4 +1,5 @@
 using Fluxo.Saldos.Service.Infra;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ var app = builder.Build();
 app.MapDefaultEndpoints();
 
 app.MapOpenApi();
+
+app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 

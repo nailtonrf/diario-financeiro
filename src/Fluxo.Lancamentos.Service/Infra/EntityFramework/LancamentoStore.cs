@@ -1,8 +1,8 @@
-﻿using Fluxo.Lancamentos.Service.Core;
-using Fluxo.Lancamentos.Service.Core.Estornar;
-using Fluxo.Lancamentos.Service.Shell.Stores;
+﻿namespace Fluxo.Lancamentos.Service.Infra.EntityFramework;
 
-namespace Fluxo.Lancamentos.Service.Infra.EntityFramework;
+using Core;
+using Core.Estornar;
+using Shell.Stores;
 
 public sealed class LancamentoStore(
     LancamentosDbContext dbContext) : ILancamentoStore
@@ -19,21 +19,33 @@ public sealed class LancamentoStore(
         var jaEstornado = await dbContext.Lancamentos
             .AsNoTracking()
             .OfType<EstornoEfetuadoEvent>()
-            .SingleOrDefaultAsync(p => p.IdEstornado.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(p => p.IdEstornado == new LancamentoId(id), cancellationToken);
 
         if (jaEstornado is not null)
             return Some<Lancamento>(jaEstornado);
 
         var estorno = await dbContext.Lancamentos
             .AsNoTracking()
-            .FirstOrDefaultAsync(p => p.IdLancamento.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(p => p.IdLancamento == new LancamentoId(id), cancellationToken);
 
         return estorno is null
             ? None<Lancamento>()
             : Some(estorno);
     }
 
-    public Task<Option<Lancamento[]>> GetByDataCompetenciaAsync(
+    public Task<Lancamento[]> GetByDataCompetenciaAsync(
         DateOnly dataCompetencia,
-        CancellationToken cancellationToken) => throw new NotImplementedException();
+        CancellationToken cancellationToken) =>
+        dbContext.Lancamentos
+            .AsNoTracking()
+            .Where(p => p.DataCompetencia == dataCompetencia)
+            .ToArrayAsync(cancellationToken);
+
+    public Task<Lancamento[]> GetAnterioresCompetenciaAsync(
+        DateOnly dataCompetencia,
+        CancellationToken cancellationToken)
+        => dbContext.Lancamentos
+            .AsNoTracking()
+            .Where(p => p.DataCompetencia < dataCompetencia)
+            .ToArrayAsync(cancellationToken);
 }

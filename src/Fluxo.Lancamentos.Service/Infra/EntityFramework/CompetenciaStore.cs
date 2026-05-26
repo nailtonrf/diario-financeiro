@@ -9,6 +9,7 @@ public sealed class CompetenciaStore(
     public async Task<Option<Competencia>> GetAsync(CancellationToken cancellationToken)
     {
         var competencia = await dbContext.Competencias
+            .AsNoTracking()
             .SingleOrDefaultAsync(cancellationToken);
 
         return competencia is null
