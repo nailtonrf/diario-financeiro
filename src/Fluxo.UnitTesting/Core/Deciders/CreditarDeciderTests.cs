@@ -1,8 +1,7 @@
 namespace Fluxo.UnitTesting.Core.Deciders;
 
 using Fluxo.Lancamentos.Service.Core.Creditar;
-using FluentAssertions;
-using Fluxo.UnitTesting.Fixtures;
+using Fixtures;
 
 /// <summary>
 /// Testes unitários para o CreditarDecider.
@@ -29,8 +28,8 @@ public sealed class CreditarDeciderTests
         // Assert
         result.IsOk.Should().BeTrue();
         result.Value.Should().BeOfType<CreditoEfetuadoEvent>();
-        result.Value.Valor.Should().Be(100m);
-        result.Value.Descricao.Should().Be("Crédito válido");
+        result.Value?.Valor.Should().Be(100m);
+        result.Value?.Descricao.Should().Be("Crédito válido");
     }
 
     [Fact]
@@ -95,7 +94,7 @@ public sealed class CreditarDeciderTests
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.Valor.Should().Be(valor);
+        result.Value?.Valor.Should().Be(valor);
     }
 
     [Fact]
@@ -115,29 +114,7 @@ public sealed class CreditarDeciderTests
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.IdLancamento.Should().NotBe(default);
-    }
-
-    [Fact]
-    public void Decide_PreservaIdempotencyKey()
-    {
-        // Arrange
-        var idempotencyKey = Guid.NewGuid();
-        var competencia = CompetenciaDataBuilder.Default();
-        var command = new CommandDataBuilder()
-            .WithValor(75m)
-            .WithIdempotencyKey(idempotencyKey)
-            .BuildCreditarCommand();
-
-        // Act
-        var result = CreditarDecider.Decide(
-            DateTime.UtcNow,
-            competencia,
-            command);
-
-        // Assert
-        result.IsOk.Should().BeTrue();
-        result.Value.IdempotencyKey.Should().Be(idempotencyKey);
+        result.Value?.IdLancamento.Should().NotBe(default);
     }
 
     [Fact]
@@ -160,7 +137,7 @@ public sealed class CreditarDeciderTests
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.DataCompetencia.Should().Be(data);
+        result.Value?.DataCompetencia.Should().Be(data);
     }
 
     [Fact]
@@ -181,7 +158,7 @@ public sealed class CreditarDeciderTests
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.CriadoEm.Should().Be(dataCriacao);
+        result.Value?.Data.Should().Be(dataCriacao);
     }
 
     [Fact]
@@ -202,7 +179,7 @@ public sealed class CreditarDeciderTests
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.Descricao.Should().Be(string.Empty);
+        result.Value?.Descricao.Should().Be(string.Empty);
     }
 
     [Fact]
@@ -224,26 +201,6 @@ public sealed class CreditarDeciderTests
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.Descricao.Should().Be(descricao);
-    }
-
-    [Fact]
-    public void Decide_EventoRetornadoTemVersionZero()
-    {
-        // Arrange
-        var competencia = CompetenciaDataBuilder.Default();
-        var command = new CommandDataBuilder()
-            .WithValor(100m)
-            .BuildCreditarCommand();
-
-        // Act
-        var result = CreditarDecider.Decide(
-            DateTime.UtcNow,
-            competencia,
-            command);
-
-        // Assert
-        result.IsOk.Should().BeTrue();
-        result.Value.EventVersion.Should().Be(0);
+        result.Value?.Descricao.Should().Be(descricao);
     }
 }

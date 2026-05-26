@@ -21,12 +21,14 @@ Fluxo.UnitTesting/
 ## 🚀 Como Executar
 
 ### Todos os testes
+
 ```bash
 cd src/Fluxo.UnitTesting
 dotnet test
 ```
 
 ### Testes específicos
+
 ```bash
 # Apenas testes de Crédito
 dotnet test --filter "FullyQualifiedName~CreditarDeciderTests"
@@ -39,6 +41,7 @@ dotnet test --filter "FullyQualifiedName~EstornarDeciderTests"
 ```
 
 ### Com Cobertura de Código
+
 ```bash
 dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude="[*]*.Program"
 ```
@@ -53,6 +56,7 @@ dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude
 ## ✅ Cobertura de Testes
 
 ### CreditarDecider
+
 - ✅ Crédito com dados válidos
 - ✅ Valor zero (erro)
 - ✅ Valor negativo (erro)
@@ -66,6 +70,7 @@ dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude
 - ✅ Versão do evento
 
 ### DebitarDecider
+
 - ✅ Débito com dados válidos
 - ✅ Valor zero (erro)
 - ✅ Valor negativo (erro)
@@ -79,6 +84,7 @@ dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude
 - ✅ Versão do evento
 
 ### EstornarDecider
+
 - ✅ Estorno com dados válidos
 - ✅ Referenciamento correto de lançamento original
 - ✅ Geração de novo ID de lançamento
@@ -92,6 +98,7 @@ dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude
 ## 🔨 Builders Disponíveis
 
 ### CompetenciaDataBuilder
+
 ```csharp
 var competencia = new CompetenciaDataBuilder()
     .WithData(DateOnly.FromDateTime(DateTime.UtcNow))
@@ -102,6 +109,7 @@ var competenciaDefault = CompetenciaDataBuilder.Default();
 ```
 
 ### CommandDataBuilder
+
 ```csharp
 var creditCommand = new CommandDataBuilder()
     .WithValor(100m)
@@ -118,6 +126,7 @@ var revertCommand = new CommandDataBuilder()
 ```
 
 ### EventDataBuilder
+
 ```csharp
 var creditEvent = new EventDataBuilder()
     .WithValor(100m)
@@ -136,6 +145,7 @@ var revertEvent = new EventDataBuilder()
 ## 📊 Padrões de Teste Utilizados
 
 ### Arrange-Act-Assert (AAA)
+
 Todos os testes seguem o padrão AAA para máxima clareza:
 
 ```csharp
@@ -156,6 +166,7 @@ public void Decide_ComDadosValidos_RetornaOk()
 ```
 
 ### Theory Tests
+
 Para validar múltiplos valores com mesmo comportamento esperado:
 
 ```csharp

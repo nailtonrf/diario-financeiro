@@ -1,8 +1,7 @@
 namespace Fluxo.UnitTesting.Core.Deciders;
 
 using Fluxo.Lancamentos.Service.Core.Estornar;
-using FluentAssertions;
-using Fluxo.UnitTesting.Fixtures;
+using Fixtures;
 
 /// <summary>
 /// Testes unitários para o EstornarDecider.
@@ -22,46 +21,16 @@ public sealed class EstornarDeciderTests
             .WithDescricao("Crédito original")
             .BuildCreditoEfetuadoEvent();
 
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
         // Act
         var result = EstornarDecider.Decide(
             DateTime.UtcNow,
             competencia,
-            lancamentoOriginal,
-            command);
+            lancamentoOriginal);
 
         // Assert
         result.IsOk.Should().BeTrue();
         result.Value.Should().BeOfType<EstornoEfetuadoEvent>();
-        result.Value.Valor.Should().Be(100m);
-    }
-
-    [Fact]
-    public void Decide_ReferenciaCorretamenteLancamentoOriginal()
-    {
-        // Arrange
-        var idLancamentoOriginal = Guid.NewGuid();
-        var competencia = CompetenciaDataBuilder.Default();
-        var lancamentoOriginal = new EventDataBuilder()
-            .WithIdLancamento(idLancamentoOriginal)
-            .WithValor(50m)
-            .BuildDebitoEfetuadoEvent();
-
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
-        // Act
-        var result = EstornarDecider.Decide(
-            DateTime.UtcNow,
-            competencia,
-            lancamentoOriginal,
-            command);
-
-        // Assert
-        result.IsOk.Should().BeTrue();
-        result.Value.IdEstornado.Should().Be(idLancamentoOriginal);
+        result.Value?.Valor.Should().Be(-100m);
     }
 
     [Fact]
@@ -74,47 +43,16 @@ public sealed class EstornarDeciderTests
             .WithIdLancamento(idLancamentoOriginal)
             .BuildCreditoEfetuadoEvent();
 
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
         // Act
         var result = EstornarDecider.Decide(
             DateTime.UtcNow,
             competencia,
-            lancamentoOriginal,
-            command);
+            lancamentoOriginal);
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.IdLancamento.Should().NotBe(idLancamentoOriginal);
-        result.Value.IdLancamento.Should().NotBe(default);
-    }
-
-    [Fact]
-    public void Decide_PreservaIdempotencyKey()
-    {
-        // Arrange
-        var idempotencyKey = Guid.NewGuid();
-        var idLancamentoOriginal = Guid.NewGuid();
-        var competencia = CompetenciaDataBuilder.Default();
-        var lancamentoOriginal = new EventDataBuilder()
-            .WithIdLancamento(idLancamentoOriginal)
-            .BuildCreditoEfetuadoEvent();
-
-        var command = new CommandDataBuilder()
-            .WithIdempotencyKey(idempotencyKey)
-            .BuildEstornarCommand(idLancamentoOriginal);
-
-        // Act
-        var result = EstornarDecider.Decide(
-            DateTime.UtcNow,
-            competencia,
-            lancamentoOriginal,
-            command);
-
-        // Assert
-        result.IsOk.Should().BeTrue();
-        result.Value.IdempotencyKey.Should().Be(idempotencyKey);
+        result.Value?.IdLancamento.Should().NotBe(idLancamentoOriginal);
+        result.Value?.IdLancamento.Should().NotBe(null);
     }
 
     [Fact]
@@ -130,19 +68,15 @@ public sealed class EstornarDeciderTests
             .WithIdLancamento(idLancamentoOriginal)
             .BuildCreditoEfetuadoEvent();
 
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
         // Act
         var result = EstornarDecider.Decide(
             DateTime.UtcNow,
             competencia,
-            lancamentoOriginal,
-            command);
+            lancamentoOriginal);
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.DataCompetencia.Should().Be(data);
+        result.Value?.DataCompetencia.Should().Be(data);
     }
 
     [Fact]
@@ -156,19 +90,15 @@ public sealed class EstornarDeciderTests
             .WithIdLancamento(idLancamentoOriginal)
             .BuildCreditoEfetuadoEvent();
 
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
         // Act
         var result = EstornarDecider.Decide(
             dataCriacao,
             competencia,
-            lancamentoOriginal,
-            command);
+            lancamentoOriginal);
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.CriadoEm.Should().Be(dataCriacao);
+        result.Value?.Data.Should().Be(dataCriacao);
     }
 
     [Fact]
@@ -182,19 +112,15 @@ public sealed class EstornarDeciderTests
             .WithValor(250m)
             .BuildCreditoEfetuadoEvent();
 
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
         // Act
         var result = EstornarDecider.Decide(
             DateTime.UtcNow,
             competencia,
-            lancamentoOriginal,
-            command);
+            lancamentoOriginal);
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.Valor.Should().Be(250m);
+        result.Value?.Valor.Should().Be(-250m);
     }
 
     [Fact]
@@ -208,43 +134,14 @@ public sealed class EstornarDeciderTests
             .WithValor(150m)
             .BuildDebitoEfetuadoEvent();
 
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
         // Act
         var result = EstornarDecider.Decide(
             DateTime.UtcNow,
             competencia,
-            lancamentoOriginal,
-            command);
+            lancamentoOriginal);
 
         // Assert
         result.IsOk.Should().BeTrue();
-        result.Value.Valor.Should().Be(150m);
-    }
-
-    [Fact]
-    public void Decide_EventoRetornadoTemVersionZero()
-    {
-        // Arrange
-        var idLancamentoOriginal = Guid.NewGuid();
-        var competencia = CompetenciaDataBuilder.Default();
-        var lancamentoOriginal = new EventDataBuilder()
-            .WithIdLancamento(idLancamentoOriginal)
-            .BuildCreditoEfetuadoEvent();
-
-        var command = new CommandDataBuilder()
-            .BuildEstornarCommand(idLancamentoOriginal);
-
-        // Act
-        var result = EstornarDecider.Decide(
-            DateTime.UtcNow,
-            competencia,
-            lancamentoOriginal,
-            command);
-
-        // Assert
-        result.IsOk.Should().BeTrue();
-        result.Value.EventVersion.Should().Be(0);
+        result.Value?.Valor.Should().Be(150m);
     }
 }

@@ -7,4 +7,5 @@
     <Project Path="Fluxo.Contracts/Fluxo.Contracts.csproj"/>
     <Project Path="Fluxo.Lancamentos.Service/Fluxo.Lancamentos.Service.csproj"/>
     <Project Path="Fluxo.Saldos.Service/Fluxo.Saldos.Service.csproj"/>
+    <Project Path="Fluxo.UnitTesting/Fluxo.UnitTesting.csproj"/>
 </Solution>
