@@ -361,7 +361,7 @@ paket-files/
 # Tabs Studio
 *.tss
 
-# Telerik's JustMock configuration file
+# Telerik's JustMake configuration file
 *.jmconfig
 
 # BizTalk build output
@@ -428,4 +428,21 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# Environment variables
 **/.env
+.env
+.env.local
+.env.*.local
+
+# JetBrains Rider (IDE for C#)
+.idea/
+.idea/**
+**/.idea/
+**/.idea/**
+*.sln.iml
+*.DotSettings.user
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
