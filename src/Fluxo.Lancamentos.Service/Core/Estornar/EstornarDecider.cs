@@ -31,6 +31,6 @@ public static class EstornarDecider
                 Valor = d.Valor,
                 IdEstornado = d.IdLancamento
             }),
-            _ => throw new ArgumentOutOfRangeException(nameof(lancamentoEstornar), lancamentoEstornar, null)
+            _ => ErrorResult.NotFound($"Lançamento desconhecido - {lancamentoEstornar.GetType().Name}")
         };
 }
