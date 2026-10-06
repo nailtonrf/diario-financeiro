@@ -13,13 +13,17 @@ var rabbitMq = ConfigureRabbitMq(builder);
 builder
     .AddProject<Projects.Fluxo_Lancamentos_Service>("fluxo-lancamentos-service")
     .WithReference(posgres)
-    .WithReference(rabbitMq);
+    .WithReference(rabbitMq)
+    .WaitFor(posgres)
+    .WaitFor(rabbitMq);
 
 builder
     .AddProject<Projects.Fluxo_Saldos_Service>("fluxo-saldos-service")
     .WithReference(posgres)
     .WithReference(mongo)
-    .WithReference(rabbitMq);
+    .WithReference(rabbitMq)
+    .WaitFor(mongo)
+    .WaitFor(rabbitMq);
 
 builder.Build().Run();
 
@@ -46,13 +50,10 @@ IResourceBuilder<PostgresDatabaseResource> ConfigurePostgres(IDistributedApplica
         .AddPostgres(
             "postgres",
             postgresUser,
-            postgresPassword)
+            postgresPassword,
+            port: postgresPort)
         .WithContainerName("postgres")
-        .WithLifetime(ContainerLifetime.Persistent)
-        .WithEndpoint(
-            postgresPort,
-            5432,
-            name: "tcp");
+        .WithLifetime(ContainerLifetime.Persistent);
 
     var resourceBuilder = postgres.AddDatabase(postgresDb);
 
@@ -80,11 +81,7 @@ IResourceBuilder<MongoDBDatabaseResource> ConfigureMongoDb(IDistributedApplicati
             mongoUser,
             mongoPassword)
         .WithContainerName("mongo")
-        .WithLifetime(ContainerLifetime.Persistent)
-        .WithEndpoint(
-            mongoPort,
-            27017,
-            name: "tcp");
+        .WithLifetime(ContainerLifetime.Persistent);
 
     var resourceBuilder = mongoDb.AddDatabase("saldodb");
 
@@ -93,11 +90,11 @@ IResourceBuilder<MongoDBDatabaseResource> ConfigureMongoDb(IDistributedApplicati
 
 IResourceBuilder<RabbitMQServerResource> ConfigureRabbitMq(IDistributedApplicationBuilder app)
 {
-    var rabbitUser = builder.AddParameter(
+    var rabbitUser = app.AddParameter(
         "rabbitmq-user",
         Environment.GetEnvironmentVariable("RABBITMQ_USER")!);
 
-    var rabbitPassword = builder.AddParameter(
+    var rabbitPassword = app.AddParameter(
         "rabbitmq-password",
         Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD")!,
         secret: true);
@@ -108,16 +105,13 @@ IResourceBuilder<RabbitMQServerResource> ConfigureRabbitMq(IDistributedApplicati
     var rabbitManagementPort = int.Parse(
         Environment.GetEnvironmentVariable("RABBITMQ_MANAGEMENT_PORT")!);
 
-    return builder
+    return app
         .AddRabbitMQ(
             "rabbitmq",
             rabbitUser,
-            rabbitPassword)
+            rabbitPassword,
+            port: rabbitPort)
         .WithContainerName("rabbitmq")
         .WithLifetime(ContainerLifetime.Persistent)
-        .WithEndpoint(
-            rabbitPort,
-            5672,
-            name: "tcp")
-        .WithManagementPlugin();
+        .WithManagementPlugin(port: rabbitManagementPort);
 }
